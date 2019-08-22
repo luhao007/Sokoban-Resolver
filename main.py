@@ -1,3 +1,4 @@
+import sys
 from tkinter import Tk
 
 from ui import SokobanUI
@@ -12,7 +13,8 @@ def show_sokoban(sokoban_map, tile_size=50, box_color='brown',
 
 
 def main():
-    with open('levels/2.txt', 'r') as f:
+    level = 1 if len(sys.argv) == 1 else sys.argv[1]
+    with open('levels/{}.txt'.format(level), 'r') as f:
         m = f.readlines()
 
     show_sokoban(m, box_color='brown', target_color='green')

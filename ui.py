@@ -92,11 +92,22 @@ class SokobanUI(Frame):
         if self.sokoban.finished:
             return
 
-        if k.keysym not in ['Up', 'Down', 'Left', 'Right']:
+        mapping = {'Up': 'up',
+                   'Down': 'down',
+                   'Left': 'left',
+                   'Right': 'right',
+                   'r': 'reset',
+                   'w': 'up',
+                   's': 'down',
+                   'a': 'left',
+                   'd': 'right'}
+
+        action = mapping.get(k.keysym)
+        if not action:
             return
 
         try:
-            getattr(self.sokoban, k.keysym.lower())()
+            getattr(self.sokoban, action)()
         except CannotMoveError:
             # TODO: play sound?
             pass
@@ -123,6 +134,7 @@ def main():
     with open('levels/1.txt', 'r') as f:
         m = f.readlines()
 
+    from tkinter import Tk
     root = Tk()
     root.geometry('800x600')
     frame = SokobanUI(sokoban_map, tile_size, box_color, target_color)
