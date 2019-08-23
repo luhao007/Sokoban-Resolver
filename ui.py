@@ -1,5 +1,6 @@
 import itertools
 import math
+import sys
 from tkinter import Canvas, Frame, Menu, Tk, filedialog, messagebox
 
 from PIL import Image, ImageTk
