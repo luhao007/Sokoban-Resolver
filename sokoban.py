@@ -19,7 +19,7 @@ class CannotMoveError(Exception):
         return 'Cannot move.'
 
 
-class Sokoban(object):
+class SokobanCore(object):
 
     def __init__(self, sokoban_map):
         self.sokoban_map = sokoban_map
@@ -44,7 +44,7 @@ class Sokoban(object):
 
     def get_current_map(self):
         """Get the current playing map"""
-        return [''.join(str(t) for t in r) + '\n' for r in self.curr]
+        return [''.join(str(t) for t in r) for r in self.curr]
 
     def show(self):
         """Print out the current playing map"""
@@ -54,7 +54,6 @@ class Sokoban(object):
         """Check whether the game is finished."""
         if all(SokobanTiles.BOX not in r for r in self.curr):
             self.finished = True
-            print('Congratulations!')
 
     def _move(self, x, y):
         """Move the player, should not be called by user directly."""
@@ -120,7 +119,7 @@ def main():
     with open('levels/1.txt', 'r') as f:
         m = f.readlines()
 
-    d = Sokoban(m)
+    d = SokobanCore(m)
 
     d.moves('llruudrrlddd')
 

@@ -1,23 +1,19 @@
+import itertools
 import math
-from tkinter import Canvas, Frame, messagebox
+from tkinter import Canvas, Frame, Menu, Tk, filedialog, messagebox
 
 from PIL import Image, ImageTk
 
-from sokoban import CannotMoveError, Sokoban, SokobanTiles
+from sokoban import CannotMoveError, SokobanCore, SokobanTiles
 
 
-class SokobanUI(Frame):
+class SokobanGameFrame(Frame):
 
-    def __init__(self, sokoban_map, tile_size=50, box_color='brown',
+    def __init__(self, tile_size=50, box_color='brown',
                  target_color='green', **kwargs):
-
-        self.sokoban = Sokoban(sokoban_map)
+        super().__init__()
+        self.sokoban = None
         self.tile_size = tile_size
-
-        height = len(sokoban_map) * self.tile_size
-        width = max([len(r) for r in sokoban_map]) * self.tile_size
-
-        super().__init__(height=height, width=width, **kwargs)
 
         self.box_color = box_color
         self.target_color = target_color
@@ -31,6 +27,16 @@ class SokobanUI(Frame):
         self.player_finished = ImageTk.PhotoImage(image)
 
         self.initUI()
+
+    def set_level(self, sokoban_map):
+        self.sokoban = SokobanCore(sokoban_map)
+
+        height = len(sokoban_map) * self.tile_size
+        width = max([len(r) for r in sokoban_map]) * self.tile_size
+
+        self.config(width=width, height=height)
+
+        self.draw()
 
     def draw_box(self, pos):
         x, y = pos
@@ -67,6 +73,8 @@ class SokobanUI(Frame):
 
     def draw(self):
         self.canvas.delete('all')
+        if not self.sokoban:
+            return
 
         for r, row in enumerate(self.sokoban.get_current_map()):
             for c, tile in enumerate(row):
@@ -119,7 +127,6 @@ class SokobanUI(Frame):
                                 'You finished the level, yay!')
 
     def initUI(self):
-        self.master.title('Sokoban')
         self.bind('<KeyPress>', self.on_key)
         self.pack(fill='both', expand=1)
         self.focus_set()
@@ -127,18 +134,77 @@ class SokobanUI(Frame):
         self.canvas = Canvas(self)
         self.canvas.pack(fill='both', expand=1)
 
-        self.draw()
+
+class SokobanGame(object):
+
+    def __init__(self):
+        self.level = 'levels/1.txt'
+        self.tile_size = 50
+        self.box_color = 'brown'
+        self.target_color = 'green'
+
+        self.root = Tk()
+        self.root.geometry('800x600')
+        self.root.title('Sokoban')
+        self.frame = SokobanGameFrame(self.tile_size,
+                                      self.box_color,
+                                      self.target_color)
+
+        self.add_menu()
+
+    def open_file(self, *args):
+        level = filedialog.askopenfilename(initialdir='levels/')
+        self.set_level(level)
+
+    def exit(self):
+        sys.exit(0)
+
+    def add_menu(self):
+        menubar = Menu(self.root)
+        file_menu = Menu(menubar, tearoff=False)
+        menubar.add_cascade(label="File", underline=0, menu=file_menu)
+
+        file_menu.add_command(label='Open...',
+                              command=self.open_file,
+                              accelerator='Ctrl+O')
+        self.root.bind_all('<Control-o>', self.open_file)
+        file_menu.add_separator()
+        file_menu.add_command(label='Exit',
+                              command=self.exit,
+                              accelerator='Alt+F4')
+
+        self.root.config(menu=menubar)
+
+    def set_level(self, level):
+        self.level = level
+
+        if isinstance(self.level, int) or \
+           isinstance(self.level, str) and self.level.isdigit():
+            self.level = 'levels/{}.txt'.format(self.level)
+
+        with open(self.level, 'r') as f:
+            sokoban_map = f.readlines()
+
+        valid = [str(v.value) for v in SokobanTiles] + [' ', '\n']
+        tiles = set(itertools.chain(*sokoban_map))
+        invalid = tiles.difference(valid)
+        if invalid:
+            raise ValueError('Invalid tiles: {}'.format(invalid))
+
+        sokoban_map = [[t for t in r if t != '\n'] for r in sokoban_map]
+
+        self.frame.set_level(sokoban_map)
+
+    def show(self):
+        if not self.frame.sokoban:
+            self.set_level(self.level)
+
+        self.frame.draw()
+        self.root.mainloop()
 
 
 def main():
-    with open('levels/1.txt', 'r') as f:
-        m = f.readlines()
-
-    from tkinter import Tk
-    root = Tk()
-    root.geometry('800x600')
-    frame = SokobanUI(sokoban_map, tile_size, box_color, target_color)
-    root.mainloop()
+    SokobanGame().show()
 
 if __name__ == '__main__':
     main()
