@@ -1,4 +1,4 @@
-# Sokoban-Resolver [![](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/download/releases/3.7.0/)
+# Sokoban-Resolver [![](https://img.shields.io/badge/python-3-blue.svg)](https://www.python.org/download/)
 
 The classic Sokoban game with a simple resolver (brute force).
 
