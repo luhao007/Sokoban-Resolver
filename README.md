@@ -1,6 +1,6 @@
 # Sokoban-Resolver [![](https://img.shields.io/badge/python-3-blue.svg)](https://www.python.org/download/)
 
-The classic Sokoban game with a simple resolver (brute force).
+The classic Sokoban (box pushing) game with a simple (brute force) resolver (pending). 
 
 ## Launching the Game
 
