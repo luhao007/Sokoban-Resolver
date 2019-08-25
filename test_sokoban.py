@@ -1,6 +1,6 @@
 import unittest
 
-from sokoban import SokobanCore, CannotMoveError
+from sokoban import CannotMoveError, SokobanCore
 
 
 class SokobanCoreTestCase(unittest.TestCase):
