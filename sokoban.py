@@ -1,16 +1,4 @@
-import enum
-import itertools
-
-
-class SokobanTiles(enum.IntEnum):
-
-    EMPTY = 0
-    TARGET = 1
-    BOX = 2
-    BOX_TARGETED = 3
-    PLAYER = 4
-    PLAYER_TARGETED = 5
-    WALL = 8
+from level import SokobanLevel, SokobanTiles
 
 
 class CannotMoveError(Exception):
@@ -21,39 +9,27 @@ class CannotMoveError(Exception):
 
 class SokobanCore(object):
 
-    def __init__(self, sokoban_map):
-        self.sokoban_map = sokoban_map
+    def __init__(self, level):
+        self.level = SokobanLevel(level)
         self.reset()
 
-    def _get_pos(self):
-        """Get the current player's position.
-
-        Should only need to be called once when game resets."""
-        for y, r in enumerate(self.curr):
-            for x, t in enumerate(r):
-                if t in (SokobanTiles.PLAYER, SokobanTiles.PLAYER_TARGETED):
-                    return (x, y)
+    @property
+    def finished(self):
+        return self._finished
 
     def reset(self):
         """Reset the map to the initial status."""
-        self.curr = [[int(i) if i.isnumeric() else 0
-                      for i in r if i != '\n']
-                     for r in self.sokoban_map]
-        self.pos = self._get_pos()
-        self.finished = False
+        self.curr = self.level.get_map()
+        self.pos = self.level.get_pos()
+        self._finished = False
 
     def get_current_map(self):
-        """Get the current playing map"""
-        return [''.join(str(t) for t in r) for r in self.curr]
-
-    def show(self):
-        """Print out the current playing map"""
-        print(self.get_current_map())
+        return self.curr
 
     def check_finish(self):
         """Check whether the game is finished."""
         if all(SokobanTiles.BOX not in r for r in self.curr):
-            self.finished = True
+            self._finished = True
 
     def _move(self, x, y):
         """Move the player, should not be called by user directly."""
@@ -123,7 +99,7 @@ def main():
 
     d.moves('llruudrrlddd')
 
-    d.show()
+    print(d.get_current_map())
 
 
 if __name__ == '__main__':

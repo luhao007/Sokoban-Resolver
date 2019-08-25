@@ -1,14 +1,17 @@
 import itertools
 import math
 import sys
-from tkinter import Canvas, Frame, Menu, Tk, filedialog, messagebox
+import textwrap
+import tkinter
+from tkinter import filedialog, messagebox
 
 from PIL import Image, ImageTk
 
-from sokoban import CannotMoveError, SokobanCore, SokobanTiles
+from level import SokobanTiles
+from sokoban import CannotMoveError, SokobanCore
 
 
-class SokobanGameFrame(Frame):
+class SokobanGameFrame(tkinter.Frame):
 
     def __init__(self, tile_size=50, box_color='brown',
                  target_color='green', **kwargs):
@@ -29,9 +32,10 @@ class SokobanGameFrame(Frame):
 
         self.initUI()
 
-    def set_level(self, sokoban_map):
-        self.sokoban = SokobanCore(sokoban_map)
+    def set_level(self, level):
+        self.sokoban = SokobanCore(level)
 
+        sokoban_map = self.sokoban.get_current_map()
         height = len(sokoban_map) * self.tile_size
         width = max([len(r) for r in sokoban_map]) * self.tile_size
 
@@ -79,10 +83,6 @@ class SokobanGameFrame(Frame):
 
         for r, row in enumerate(self.sokoban.get_current_map()):
             for c, tile in enumerate(row):
-                if not tile.isnumeric():
-                    continue
-                tile = int(tile)
-
                 pos = (c*self.tile_size, r*self.tile_size)
 
                 if tile == SokobanTiles.TARGET:
@@ -132,7 +132,7 @@ class SokobanGameFrame(Frame):
         self.pack(fill='both', expand=1)
         self.focus_set()
 
-        self.canvas = Canvas(self)
+        self.canvas = tkinter.Canvas(self)
         self.canvas.pack(fill='both', expand=1)
 
 
@@ -144,7 +144,7 @@ class SokobanGame(object):
         self.box_color = 'brown'
         self.target_color = 'green'
 
-        self.root = Tk()
+        self.root = tkinter.Tk()
         self.root.geometry('800x600')
         self.root.title('Sokoban')
         self.frame = SokobanGameFrame(self.tile_size,
@@ -153,6 +153,9 @@ class SokobanGame(object):
 
         self.add_menu()
 
+    def set_level(self, level):
+        self.frame.set_level(level)
+
     def open_file(self, *args):
         level = filedialog.askopenfilename(initialdir='levels/')
         self.set_level(level)
@@ -160,10 +163,19 @@ class SokobanGame(object):
     def exit(self):
         sys.exit(0)
 
+    def help_key(self):
+        msg = """
+        Use WASD or arror keys to move player.
+        Use R for reset map."""
+        msg = textwrap.dedent(msg).strip()
+        messagebox.showinfo(title='Help', message=msg)
+
     def add_menu(self):
-        menubar = Menu(self.root)
-        file_menu = Menu(menubar, tearoff=False)
+        menubar = tkinter.Menu(self.root)
+        file_menu = tkinter.Menu(menubar, tearoff=False)
+        help_menu = tkinter.Menu(menubar, tearoff=False)
         menubar.add_cascade(label="File", underline=0, menu=file_menu)
+        menubar.add_cascade(label="Help", underline=0, menu=help_menu)
 
         file_menu.add_command(label='Open...',
                               command=self.open_file,
@@ -174,27 +186,9 @@ class SokobanGame(object):
                               command=self.exit,
                               accelerator='Alt+F4')
 
+        help_menu.add_command(label='Help', command=self.help_key)
+
         self.root.config(menu=menubar)
-
-    def set_level(self, level):
-        self.level = level
-
-        if isinstance(self.level, int) or \
-           isinstance(self.level, str) and self.level.isdigit():
-            self.level = 'levels/{}.txt'.format(self.level)
-
-        with open(self.level, 'r') as f:
-            sokoban_map = f.readlines()
-
-        valid = [str(v.value) for v in SokobanTiles] + [' ', '\n']
-        tiles = set(itertools.chain(*sokoban_map))
-        invalid = tiles.difference(valid)
-        if invalid:
-            raise ValueError('Invalid tiles: {}'.format(invalid))
-
-        sokoban_map = [[t for t in r if t != '\n'] for r in sokoban_map]
-
-        self.frame.set_level(sokoban_map)
 
     def show(self):
         if not self.frame.sokoban:
