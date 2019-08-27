@@ -125,6 +125,12 @@ class SokobanFrame(tkinter.Frame):
         if self.sokoban.finished:
             messagebox.showinfo('Congratulations!',
                                 'You finished the level, yay!')
+            try:
+                self.sokoban.next_level()
+                self.draw()
+            except ValueError:
+                messagebox.showinfo('Complete!',
+                                    'You finished all level in current map!')
 
     def initUI(self):
         self.bind('<KeyPress>', self.on_key)

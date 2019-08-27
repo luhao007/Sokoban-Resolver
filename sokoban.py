@@ -23,6 +23,10 @@ class SokobanCore(object):
         self.pos = self.level.get_pos()
         self._finished = False
 
+    def next_level(self):
+        self.level.next_level()
+        self.reset()
+
     def get_current_map(self):
         return self.curr
 

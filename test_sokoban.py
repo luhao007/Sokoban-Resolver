@@ -187,6 +187,15 @@ class SokobanCoreTestCase(unittest.TestCase):
         with self.assertRaises(CannotMoveError):
             sokoban.right()
 
+    def test_multiple_levels(self):
+        sokoban = SokobanCore([[[0, 4]], [[4, 0]]])
+        self.assertEqual(sokoban.get_current_map(), [[0, 4]])
+        sokoban.next_level()
+        self.assertEqual(sokoban.get_current_map(), [[4, 0]])
+
+        with self.assertRaises(Exception):
+            sokoban.next_level()
+
 
 if __name__ == '__main__':
     unittest.main()
