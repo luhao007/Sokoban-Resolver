@@ -41,7 +41,8 @@ class SokobanGame(object):
         W A S D         Move player
         Arrow Keys      Move player
         U               Undo last move
-        R               Reset map"""
+        R               Reset map
+        N P             Navigate Maps"""
         msg = textwrap.dedent(msg).strip()
         messagebox.showinfo(title='Help', message=msg)
 
