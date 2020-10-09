@@ -15,7 +15,7 @@ class SokobanGame(object):
         self.target_color = 'green'
 
         self.root = tkinter.Tk()
-        self.root.geometry('1280x800')
+        self.root.geometry(f'{self.tile_size*28}x{self.tile_size*16}')
         self.root.title('Sokoban')
         self.frame = SokobanFrame(self.tile_size,
                                   self.box_color,

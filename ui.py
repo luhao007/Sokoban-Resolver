@@ -55,7 +55,7 @@ class SokobanFrame(tkinter.Frame):
         try:
             self.sokoban.next_level()
             self.draw()
-        except ValueError:
+        except (ValueError, FileNotFoundError):
             if complete:
                 messagebox.showinfo('Complete!',
                                     'You finished all level in current map!')
@@ -64,7 +64,7 @@ class SokobanFrame(tkinter.Frame):
         try:
             self.sokoban.prev_level()
             self.draw()
-        except ValueError:
+        except (ValueError, FileNotFoundError):
             pass
 
     def draw_box(self, pos):
@@ -104,9 +104,8 @@ class SokobanFrame(tkinter.Frame):
         if self.info_text:
             self.canvas.delete(self.info_text)
 
-        info = 'Maps: {}/{}\nCurrent Moves: {}'.format(
-            self.sokoban.level.curr_map + 1,
-            len(self.sokoban.level.sokoban_map),
+        info = '{}\nCurrent Moves: {}'.format(
+            self.sokoban.map_info,
             len(self.sokoban.get_moves())
         )
         self.info_text = self.canvas.create_text(
@@ -129,7 +128,7 @@ class SokobanFrame(tkinter.Frame):
                     self.draw_target(pos)
                 elif tile == SokobanTiles.BOX:
                     self.draw_box(pos)
-                elif tile == SokobanTiles.BOX_TARGETED:
+                elif tile == SokobanTiles.BOX_WITH_TARGET:
                     self.draw_box(pos)
                     self.draw_target(pos)
                 elif tile & SokobanTiles.PLAYER:

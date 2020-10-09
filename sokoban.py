@@ -36,7 +36,7 @@ class SokobanState(object):
         """Get the current player's position."""
         for y, r in enumerate(self.map):
             for x, t in enumerate(r):
-                if t in (SokobanTiles.PLAYER, SokobanTiles.PLAYER_TARGETED):
+                if t & SokobanTiles.PLAYER:
                     return (x, y)
 
     def move(self, m: Moves):
@@ -91,20 +91,16 @@ class SokobanCore(object):
         self.reset()
 
     @property
-    def curr_level(self):
-        return self.level.curr_map
-
-    @property
-    def total_level(self):
-        return len(self.level.sokoban_map)
-
-    @property
     def map(self):
         return self.state.map
 
     @property
     def player_pos(self):
         return self.state.player_pos()
+
+    @property
+    def map_info(self):
+        return self.level.map_info()
 
     def get_moves(self):
         return self.moves
