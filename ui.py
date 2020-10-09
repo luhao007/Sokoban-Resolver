@@ -34,7 +34,7 @@ class SokobanFrame(tkinter.Frame):
     def set_level(self, level):
         self.sokoban = SokobanCore(level)
 
-        sokoban_map = self.sokoban.get_current_map()
+        sokoban_map = self.sokoban.map
         height = len(sokoban_map) * self.tile_size
         width = max([len(r) for r in sokoban_map]) * self.tile_size
 
@@ -50,6 +50,22 @@ class SokobanFrame(tkinter.Frame):
         if self.sokoban and self.sokoban.get_moves():
             msg = ' '.join([arrows[m] for m in self.sokoban.get_moves()])
             messagebox.showinfo(title='Moves', message=msg)
+
+    def next_level(self, complete=False):
+        try:
+            self.sokoban.next_level()
+            self.draw()
+        except ValueError:
+            if complete:
+                messagebox.showinfo('Complete!',
+                                    'You finished all level in current map!')
+
+    def prev_level(self):
+        try:
+            self.sokoban.prev_level()
+            self.draw()
+        except ValueError:
+            pass
 
     def draw_box(self, pos):
         x, y = pos
@@ -105,7 +121,7 @@ class SokobanFrame(tkinter.Frame):
         if not self.sokoban:
             return
 
-        for r, row in enumerate(self.sokoban.get_current_map()):
+        for r, row in enumerate(self.sokoban.map):
             for c, tile in enumerate(row):
                 pos = (c*self.tile_size, r*self.tile_size)
 
@@ -130,23 +146,25 @@ class SokobanFrame(tkinter.Frame):
         if self.sokoban.finished and k.keysym != 'r':
             return
 
-        mapping = {'Up': 'up',
-                   'Down': 'down',
-                   'Left': 'left',
-                   'Right': 'right',
-                   'r': 'reset',
-                   'w': 'up',
-                   's': 'down',
-                   'a': 'left',
-                   'd': 'right',
-                   'u': 'undo'}
+        mapping = {'Up': self.sokoban.up,
+                   'Down': self.sokoban.down,
+                   'Left': self.sokoban.left,
+                   'Right': self.sokoban.right,
+                   'r': self.sokoban.reset,
+                   'w': self.sokoban.up,
+                   's': self.sokoban.down,
+                   'a': self.sokoban.left,
+                   'd': self.sokoban.right,
+                   'u': self.sokoban.undo,
+                   'n': self.next_level,
+                   'p': self.prev_level}
 
         action = mapping.get(k.keysym)
         if not action:
             return
 
         try:
-            getattr(self.sokoban, action)()
+            action()
         except CannotMoveError:
             # TODO: play sound?
             pass
@@ -156,12 +174,7 @@ class SokobanFrame(tkinter.Frame):
         if self.sokoban.finished:
             messagebox.showinfo('Congratulations!',
                                 'You finished the level, yay!')
-            try:
-                self.sokoban.next_level()
-                self.draw()
-            except ValueError:
-                messagebox.showinfo('Complete!',
-                                    'You finished all level in current map!')
+            self.next_level(complete=True)
 
     def initUI(self):
         self.bind('<KeyPress>', self.on_key)

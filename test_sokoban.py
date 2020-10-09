@@ -167,8 +167,8 @@ class SokobanCoreTestCase(unittest.TestCase):
         self.sokoban = SokobanCore(self.sokoban_map)
 
     def test_basics(self):
-        self.assertEqual(self.sokoban.get_current_map(), self.state.map)
-        self.assertEqual(self.sokoban.get_current_pos(),
+        self.assertEqual(self.sokoban.map, self.state.map)
+        self.assertEqual(self.sokoban.player_pos,
                          self.state.player_pos())
         self.assertEqual(self.sokoban.finished, self.state.check_finish())
 
@@ -206,14 +206,20 @@ class SokobanCoreTestCase(unittest.TestCase):
         self.assertEquals(self.sokoban.get_moves(), [Moves.RIGHT])
         self.assertEquals(self.sokoban.state, self.state.move(Moves.RIGHT))
 
-    def test_next_level(self):
+    def test_levels(self):
         sokoban = SokobanCore([[[0, 4]], [[4, 0]]])
-        self.assertEqual(sokoban.get_current_map(), [[0, 4]])
+        self.assertEqual(sokoban.map, [[0, 4]])
         sokoban.next_level()
-        self.assertEqual(sokoban.get_current_map(), [[4, 0]])
+        self.assertEqual(sokoban.map, [[4, 0]])
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(ValueError):
             sokoban.next_level()
+
+        sokoban.prev_level()
+        self.assertEqual(sokoban.map, [[0, 4]])
+
+        with self.assertRaises(ValueError):
+            sokoban.prev_level()
 
     def test_undo(self):
         self.sokoban.up()

@@ -82,14 +82,28 @@ class SokobanCore(object):
         self.moves = []
         self.previous_states = []
 
+    def prev_level(self):
+        self.level.prev_level()
+        self.reset()
+
     def next_level(self):
         self.level.next_level()
         self.reset()
 
-    def get_current_map(self):
+    @property
+    def curr_level(self):
+        return self.level.curr_map
+
+    @property
+    def total_level(self):
+        return len(self.level.sokoban_map)
+
+    @property
+    def map(self):
         return self.state.map
 
-    def get_current_pos(self):
+    @property
+    def player_pos(self):
         return self.state.player_pos()
 
     def get_moves(self):
@@ -147,7 +161,7 @@ def main():
 
     d.move_many('llruudrrlddd')
 
-    print(d.get_current_map())
+    print(d.map)
     print(d.get_moves())
 
 

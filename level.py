@@ -51,6 +51,12 @@ class SokobanLevel(object):
         else:
             raise ValueError('No more map!')
 
+    def prev_level(self):
+        if self.curr_map:
+            self.curr_map -= 1
+        else:
+            raise ValueError('This is the first map!')
+
     def generate_map(self, l):
         valid = [v.value for v in SokobanTiles] + \
                 [str(v.value) for v in SokobanTiles] + \
