@@ -42,15 +42,6 @@ class SokobanLevel(object):
         else:
             raise ValueError('Unknown level: {}'.format(level))
 
-    def get_pos(self):
-        """Get the current player's position.
-
-        Should only need to be called once when game resets."""
-        for y, r in enumerate(self.sokoban_map[self.curr_map]):
-            for x, t in enumerate(r):
-                if t in (SokobanTiles.PLAYER, SokobanTiles.PLAYER_TARGETED):
-                    return (x, y)
-
     def get_map(self):
         return copy.deepcopy(self.sokoban_map[self.curr_map])
 
@@ -97,9 +88,10 @@ class SokobanLevel(object):
 
 
 def main():
-    l = SokobanLevel('levels/Original.slc')
+    level = SokobanLevel('levels/Original.slc')
     from pprint import pprint
-    pprint(l.sokoban_map[0])
+    pprint(level.sokoban_map[0])
+
 
 if __name__ == '__main__':
     main()
