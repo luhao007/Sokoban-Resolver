@@ -33,18 +33,25 @@ class SokobanGame(object):
     def exit(self):
         sys.exit(0)
 
+    def show_moves(self):
+        self.frame.show_moves()
+
     def help_key(self):
         msg = """
-        Use WASD or arror keys to move player.
-        Use R for reset map."""
+        W A S D         Move player
+        Arrow Keys      Move player
+        U               Undo last move
+        R               Reset map"""
         msg = textwrap.dedent(msg).strip()
         messagebox.showinfo(title='Help', message=msg)
 
     def add_menu(self):
         menubar = tkinter.Menu(self.root)
         file_menu = tkinter.Menu(menubar, tearoff=False)
+        game_menu = tkinter.Menu(menubar, tearoff=False)
         help_menu = tkinter.Menu(menubar, tearoff=False)
         menubar.add_cascade(label="File", underline=0, menu=file_menu)
+        menubar.add_cascade(label="Game", underline=0, menu=game_menu)
         menubar.add_cascade(label="Help", underline=0, menu=help_menu)
 
         file_menu.add_command(label='Open...',
@@ -55,6 +62,9 @@ class SokobanGame(object):
         file_menu.add_command(label='Exit',
                               command=self.exit,
                               accelerator='Alt+F4')
+
+        game_menu.add_command(label='Show Moves...',
+                              command=self.show_moves)
 
         help_menu.add_command(label='Help', command=self.help_key)
 

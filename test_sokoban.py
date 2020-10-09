@@ -215,6 +215,13 @@ class SokobanCoreTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             sokoban.next_level()
 
+    def test_undo(self):
+        self.sokoban.up()
+        self.sokoban.up()
+        self.sokoban.undo()
+        self.assertEqual(self.sokoban.state, self.state.move(Moves.UP))
+        self.assertEqual(self.sokoban.get_moves(), [Moves.UP])
+
 
 if __name__ == '__main__':
     unittest.main()

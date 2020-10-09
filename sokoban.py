@@ -46,7 +46,7 @@ class SokobanState(object):
 
         x, y = m.value
 
-        map = copy.copy(self.map)
+        map = copy.deepcopy(self.map)
         c_x, c_y = self.player_pos()
         ahead = self.map[c_y + y][c_x + x]
 
@@ -130,6 +130,13 @@ class SokobanCore(object):
                 self.right()
             else:
                 raise RuntimeError('Illigal move: {}'.format(a))
+
+    def undo(self):
+        if not self.previous_states:
+            return
+
+        self.state = self.previous_states.pop(-1)
+        self.moves.pop(-1)
 
 
 def main():

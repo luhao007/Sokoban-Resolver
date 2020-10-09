@@ -42,6 +42,11 @@ class SokobanFrame(tkinter.Frame):
 
         self.draw()
 
+    def show_moves(self):
+        if self.sokoban:
+            msg = [m.name for m in self.sokoban.get_moves()]
+            messagebox.showinfo(title='Moves', message=msg)
+
     def draw_box(self, pos):
         x, y = pos
         s = self.tile_size
@@ -108,7 +113,8 @@ class SokobanFrame(tkinter.Frame):
                    'w': 'up',
                    's': 'down',
                    'a': 'left',
-                   'd': 'right'}
+                   'd': 'right',
+                   'u': 'undo'}
 
         action = mapping.get(k.keysym)
         if not action:
