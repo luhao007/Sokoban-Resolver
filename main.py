@@ -36,7 +36,7 @@ class SokobanGame(object):
     def show_moves(self):
         self.frame.show_moves()
 
-    def help_key(self):
+    def show_help(self, *args):
         msg = """
         W A S D         Move player
         Arrow Keys      Move player
@@ -66,7 +66,10 @@ class SokobanGame(object):
         game_menu.add_command(label='Show Moves...',
                               command=self.show_moves)
 
-        help_menu.add_command(label='Help', command=self.help_key)
+        help_menu.add_command(label='Help...',
+                              command=self.show_help,
+                              accelerator='F1')
+        self.root.bind_all('<F1>', self.show_help)
 
         self.root.config(menu=menubar)
 

@@ -7,7 +7,7 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 
 from level import SokobanTiles
-from sokoban import CannotMoveError, SokobanCore
+from sokoban import CannotMoveError, SokobanCore, Moves
 
 
 class SokobanFrame(tkinter.Frame):
@@ -43,8 +43,12 @@ class SokobanFrame(tkinter.Frame):
         self.draw()
 
     def show_moves(self):
-        if self.sokoban:
-            msg = [m.name for m in self.sokoban.get_moves()]
+        arrows = {Moves.LEFT: '🡐',
+                  Moves.RIGHT: '🡒',
+                  Moves.UP: '🡑',
+                  Moves.DOWN: '🡓'}
+        if self.sokoban and self.sokoban.get_moves():
+            msg = ' '.join([arrows[m] for m in self.sokoban.get_moves()])
             messagebox.showinfo(title='Moves', message=msg)
 
     def draw_box(self, pos):
@@ -80,6 +84,22 @@ class SokobanFrame(tkinter.Frame):
                                      outline=self.box_color,
                                      fill=self.box_color)
 
+    def draw_info(self):
+        if self.info_text:
+            self.canvas.delete(self.info_text)
+
+        info = 'Maps: {}/{}\nCurrent Moves: {}'.format(
+            self.sokoban.level.curr_map + 1,
+            len(self.sokoban.level.sokoban_map),
+            len(self.sokoban.get_moves())
+        )
+        self.info_text = self.canvas.create_text(
+            self.canvas.winfo_width()-10, 10,
+            text=info, font="Tahoma 20",
+            justify=tkinter.CENTER,
+            anchor=tkinter.NE
+        )
+
     def draw(self):
         self.canvas.delete('all')
         if not self.sokoban:
@@ -101,8 +121,13 @@ class SokobanFrame(tkinter.Frame):
                 elif tile == SokobanTiles.WALL:
                     self.draw_wall(pos)
 
+        self.draw_info()
+
+    def on_configure(self, e):
+        self.draw_info()
+
     def on_key(self, k):
-        if self.sokoban.finished:
+        if self.sokoban.finished and k.keysym != 'r':
             return
 
         mapping = {'Up': 'up',
@@ -144,6 +169,8 @@ class SokobanFrame(tkinter.Frame):
         self.focus_set()
 
         self.canvas = tkinter.Canvas(self)
+        self.canvas.bind('<Configure>', self.on_configure)
+        self.info_text = None
         self.canvas.pack(fill='both', expand=1)
 
 
