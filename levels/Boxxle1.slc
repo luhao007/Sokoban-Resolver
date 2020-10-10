@@ -1,10 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE SokobanLevels SYSTEM "SokobanLev.dtd">
 <SokobanLevels>
-  <Title>Boxxle 1</Title>
+  <Title>Boxxle (1990)</Title>
   <Description>
-Levels from the Game Boy.
-
+108 Levels from the Game Boy game Boxxie (1990).
   </Description>
   <LevelCollection Copyright="Thinking Rabbit, Inc." MaxWidth="20" MaxHeight="18">
     <Level Id="#1" Width="9" Height="9">

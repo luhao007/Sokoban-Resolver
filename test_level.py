@@ -19,7 +19,7 @@ class SokobanLevelTestCase(unittest.TestCase):
 
     def test_multiple_levels(self):
         level = SokobanLevel([[[8, 4, 0, 8]], [[8, 0, 4, 8]]])
-        self.assertEqual(len(level.sokoban_map), 2)
+        self.assertEqual(len(level.maps), 2)
         self.assertEqual(level.get_map(), [[8, 4, 0, 8]])
         level.next_level()
         self.assertEqual(level.get_map(), [[8, 0, 4, 8]])

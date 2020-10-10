@@ -111,6 +111,7 @@ class SokobanFrame(tkinter.Frame):
         self.info_text = self.canvas.create_text(
             self.canvas.winfo_width()-10, 10,
             text=info, font="Tahoma 20",
+            width=300,
             justify=tkinter.CENTER,
             anchor=tkinter.NE
         )

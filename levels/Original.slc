@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SokobanLevels xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="SokobanLev.xsd">
-  <Title>Original &amp; Extra</Title>
+<!DOCTYPE SokobanLevels SYSTEM "SokobanLev.dtd">
+<SokobanLevels>
+  <Title>Original &amp; Extra (1988)</Title>
   <Description>
-The 50 original levels from Sokoban plus the 40 from Extra.
+The 50 original levels from Sokoban US version (1988) plus the 40 from Extra.
   </Description>
   <LevelCollection Copyright="Thinking Rabbit" MaxWidth="20" MaxHeight="17">
     <Level Id="1" Width="19" Height="11">
