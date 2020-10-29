@@ -7,7 +7,7 @@
         "-s",
         "./tests",
         "-p",
-        "test*.py"
+        "test_*.py"
     ],
     "python.testing.pytestEnabled": false,
     "python.testing.nosetestsEnabled": false,
@@ -17,5 +17,8 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "vscode.python",
     "editor.formatOnPaste": true,
-    "trailing-spaces.trimOnSave": true
+    "trailing-spaces.trimOnSave": true,
+    "python.testing.pytestArgs": [
+        "tests"
+    ]
 }

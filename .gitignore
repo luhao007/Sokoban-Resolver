@@ -1,6 +1,8 @@
 __pycache__/
+.vscode/
 build/
 dist/
 *.rar
 *.7z
 *.zip
+*.code-workspace
