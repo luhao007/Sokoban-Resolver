@@ -11,6 +11,7 @@ class SokobanFrame(tkinter.Frame):
 
     def __init__(self, root, tile_size=50, box_color='brown',
                  target_color='green', **kwargs):
+        """UI for Sokoban game."""
         super().__init__(**kwargs)
         self.root = root
         self.sokoban = None

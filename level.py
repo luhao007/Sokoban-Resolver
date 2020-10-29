@@ -31,8 +31,8 @@ class SokobanMap:
 
     def __init__(self, sokoban_map, map_id=None):
         """Single sokoban map."""
-        self.map = self.generate_map(sokoban_map)
         self.id = map_id
+        self.generate_map(sokoban_map)
 
     def generate_map(self, sokoban_map):
         valid = [v.value for v in SokobanTiles] + \
@@ -44,9 +44,9 @@ class SokobanMap:
         if invalid:
             raise ValueError('Invalid tiles: {}'.format(invalid))
 
-        return [[int(SLCTileMap.get(t, t))
-                 for t in r if t != '\n']
-                for r in sokoban_map]
+        self.map = [[int(SLCTileMap.get(t, t))
+                     for t in r if t != '\n']
+                    for r in sokoban_map]
 
 
 class SokobanLevel:

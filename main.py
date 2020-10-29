@@ -10,6 +10,7 @@ from ui import SokobanFrame
 class SokobanGame:
 
     def __init__(self):
+        """Classic Sokoban game."""
         self.level = 'levels/1.txt'
         self.tile_size = 50
         self.box_color = 'brown'

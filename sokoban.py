@@ -7,6 +7,7 @@ from level import SokobanLevel, SokobanTiles
 class CannotMoveError(Exception):
 
     def __str__(self):
+        """Return human readable string."""
         return 'Cannot move.'
 
 
@@ -21,9 +22,11 @@ class Moves(Enum):
 class SokobanState:
 
     def __init__(self, sokoban_map):
+        """State of a Sokoban game."""
         self.map = sokoban_map
 
     def __eq__(self, other):
+        """Check if two maps are the same."""
         return self.map == other.map
 
     def check_finish(self):
