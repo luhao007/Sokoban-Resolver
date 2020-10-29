@@ -98,6 +98,14 @@ class SokobanCore:
         return self.state.map
 
     @property
+    def height(self):
+        return len(self.map)
+
+    @property
+    def width(self):
+        return max([len(r) for r in self.map])
+
+    @property
     def player_pos(self):
         return self.state.player_pos()
 

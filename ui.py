@@ -9,9 +9,10 @@ from sokoban import CannotMoveError, SokobanCore, Moves
 
 class SokobanFrame(tkinter.Frame):
 
-    def __init__(self, tile_size=50, box_color='brown',
+    def __init__(self, root, tile_size=50, box_color='brown',
                  target_color='green', **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
+        self.root = root
         self.sokoban = None
         self.tile_size = tile_size
 
@@ -30,13 +31,6 @@ class SokobanFrame(tkinter.Frame):
 
     def set_level(self, level):
         self.sokoban = SokobanCore(level)
-
-        sokoban_map = self.sokoban.map
-        height = len(sokoban_map) * self.tile_size
-        width = max([len(r) for r in sokoban_map]) * self.tile_size
-
-        self.config(width=width, height=height)
-
         self.draw()
 
     def show_moves(self):
@@ -136,7 +130,17 @@ class SokobanFrame(tkinter.Frame):
 
         self.draw_info()
 
-    def on_configure(self, e):
+        if self.sokoban:
+            # Leave some please for the info plat
+            width = self.sokoban.width * self.tile_size + 300
+            height = self.sokoban.height * self.tile_size
+        else:
+            width = 640
+            height = 480
+
+        self.root.geometry(f'{width}x{height}')
+
+    def on_configure(self, _e):
         self.draw_info()
 
     def on_key(self, k):
@@ -187,7 +191,7 @@ class SokobanFrame(tkinter.Frame):
 def main():
     root = tkinter.Tk()
     root.geometry('800x600')
-    f = SokobanFrame()
+    f = SokobanFrame(root)
     f.set_level(1)
     root.mainloop()
 

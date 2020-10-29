@@ -15,9 +15,9 @@ class SokobanGame:
         self.target_color = 'green'
 
         self.root = tkinter.Tk()
-        self.root.geometry(f'{self.tile_size*28}x{self.tile_size*16}')
         self.root.title('Sokoban')
-        self.frame = SokobanFrame(self.tile_size,
+        self.frame = SokobanFrame(self.root,
+                                  self.tile_size,
                                   self.box_color,
                                   self.target_color)
 
@@ -26,9 +26,10 @@ class SokobanGame:
     def set_level(self, level):
         self.frame.set_level(level)
 
-    def open_file(self, *args):
+    def open_file(self, *_args):
         level = filedialog.askopenfilename(initialdir='levels/')
-        self.set_level(level)
+        if level:
+            self.set_level(level)
 
     def exit(self):
         sys.exit(0)
@@ -36,7 +37,7 @@ class SokobanGame:
     def show_moves(self):
         self.frame.show_moves()
 
-    def show_help(self, *args):
+    def show_help(self, *_args):
         msg = """
         W A S D         Move player
         Arrow Keys      Move player

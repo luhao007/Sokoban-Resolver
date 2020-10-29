@@ -175,15 +175,13 @@ def convert(folder):
         with open('/'.join([folder, file]), 'r') as f:
             for r in f.readlines():
                 line = ElementTree.SubElement(level, 'L')
-                line.text = r[:-1]
+                line.text = r[:-1].rstrip()
 
         i += 1
 
     s = ElementTree.tostring(root, encoding='utf-8', xml_declaration=False)
     parsed = minidom.parseString(s)
     xml = parsed.toprettyxml(indent='  ', encoding='utf-8', newl='\n')
-
-    # print(str(xml, encoding='utf-8'))
 
     with open(f'{folder}.slc', 'wb') as f:
         f.write(xml)
