@@ -17,5 +17,3 @@ The level files are simple text files with each character as one tile.
 The tiles are defined in ```SokobanTiles``` class in [sokoban.py](https://github.com/luhao007/Sokoban-Resolver/blob/master/sokoban.py).
 
 Also support `.slc` and `.xml` version of sokoban level collections.
-
-
