@@ -6,7 +6,7 @@ The classic Sokoban (box pushing) game with a simple (brute force) resolver (pen
 
 ## Launching the Game
 
-```python -m main LEVEL```
+Run `main.py`
 
 ## Levels
 
@@ -14,3 +14,7 @@ The levels are stored in [levels](https://github.com/luhao007/Sokoban-Resolver/t
 The level files are simple text files with each character as one tile.
 
 The tiles are defined in ```SokobanTiles``` class in [sokoban.py](https://github.com/luhao007/Sokoban-Resolver/blob/master/sokoban.py).
+
+Also support `.slc` and `.xml` version of sokoban level collections.
+
+
