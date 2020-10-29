@@ -32,7 +32,7 @@ SLCTileMap = {
 class SokobanMap:
 
     def __init__(self, sokoban_map, map_id=None):
-        self.m = self.generate_map(sokoban_map)
+        self.map = self.generate_map(sokoban_map)
         self.id = map_id
 
     def generate_map(self, sokoban_map):
@@ -87,6 +87,10 @@ class SokobanLevel:
                 self.load_level(f'{suffix}{int(i)+1}.txt')
         elif isinstance(self.level, int):
             self.load_level(int(self.level) + 1)
+        elif isinstance(self.level, list):
+            if self.curr_map + 1 >= len(self.maps):
+                raise ValueError('No more map!')
+            self.curr_map += 1
 
     def prev_level(self):
         if isinstance(self.level, str):
@@ -99,6 +103,10 @@ class SokobanLevel:
                 self.load_level(f'{suffix}{int(i)-1}.txt')
         elif isinstance(self.level, int):
             self.load_level(int(self.level) - 1)
+        elif isinstance(self.level, list):
+            if not self.curr_map:
+                raise ValueError('This is the first map!')
+            self.curr_map -= 1
 
     def map_info(self):
         if isinstance(self.level, list):
