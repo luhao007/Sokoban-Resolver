@@ -6,16 +6,16 @@ from sokoban import CannotMoveError, SokobanCore, SokobanState, Moves
 class SokobanStateTestCase(unittest.TestCase):
 
     def setUp(self):
-        map = [[0, 0, 0, 8, 8, 8, 0, 0, 0],
-               [0, 0, 0, 8, 1, 8, 0, 0, 0],
-               [0, 0, 0, 8, 2, 8, 0, 0, 0],
-               [8, 8, 8, 8, 0, 8, 8, 8, 8],
-               [8, 1, 2, 0, 4, 0, 2, 1, 8],
-               [8, 8, 8, 8, 0, 8, 8, 8, 8],
-               [0, 0, 0, 8, 2, 8, 0, 0, 0],
-               [0, 0, 0, 8, 1, 8, 0, 0, 0],
-               [0, 0, 0, 8, 8, 8, 0, 0, 0]]
-        self.state = SokobanState(map)
+        m = [[0, 0, 0, 8, 8, 8, 0, 0, 0],
+             [0, 0, 0, 8, 1, 8, 0, 0, 0],
+             [0, 0, 0, 8, 2, 8, 0, 0, 0],
+             [8, 8, 8, 8, 0, 8, 8, 8, 8],
+             [8, 1, 2, 0, 4, 0, 2, 1, 8],
+             [8, 8, 8, 8, 0, 8, 8, 8, 8],
+             [0, 0, 0, 8, 2, 8, 0, 0, 0],
+             [0, 0, 0, 8, 1, 8, 0, 0, 0],
+             [0, 0, 0, 8, 8, 8, 0, 0, 0]]
+        self.state = SokobanState(m)
 
     def test_move_up(self):
         s = self.state.move(Moves.UP)
@@ -188,23 +188,23 @@ class SokobanCoreTestCase(unittest.TestCase):
 
     def test_move_up(self):
         self.sokoban.up()
-        self.assertEquals(self.sokoban.get_moves(), [Moves.UP])
-        self.assertEquals(self.sokoban.state, self.state.move(Moves.UP))
+        self.assertEqual(self.sokoban.get_moves(), [Moves.UP])
+        self.assertEqual(self.sokoban.state, self.state.move(Moves.UP))
 
     def test_move_down(self):
         self.sokoban.down()
-        self.assertEquals(self.sokoban.get_moves(), [Moves.DOWN])
-        self.assertEquals(self.sokoban.state, self.state.move(Moves.DOWN))
+        self.assertEqual(self.sokoban.get_moves(), [Moves.DOWN])
+        self.assertEqual(self.sokoban.state, self.state.move(Moves.DOWN))
 
     def test_move_left(self):
         self.sokoban.left()
-        self.assertEquals(self.sokoban.get_moves(), [Moves.LEFT])
-        self.assertEquals(self.sokoban.state, self.state.move(Moves.LEFT))
+        self.assertEqual(self.sokoban.get_moves(), [Moves.LEFT])
+        self.assertEqual(self.sokoban.state, self.state.move(Moves.LEFT))
 
     def test_move_right(self):
         self.sokoban.right()
-        self.assertEquals(self.sokoban.get_moves(), [Moves.RIGHT])
-        self.assertEquals(self.sokoban.state, self.state.move(Moves.RIGHT))
+        self.assertEqual(self.sokoban.get_moves(), [Moves.RIGHT])
+        self.assertEqual(self.sokoban.state, self.state.move(Moves.RIGHT))
 
     def test_levels(self):
         sokoban = SokobanCore([[[0, 4]], [[4, 0]]])

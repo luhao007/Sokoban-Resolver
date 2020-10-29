@@ -6,7 +6,7 @@ from tkinter import filedialog, messagebox
 from ui import SokobanFrame
 
 
-class SokobanGame(object):
+class SokobanGame:
 
     def __init__(self):
         self.level = 'levels/1.txt'

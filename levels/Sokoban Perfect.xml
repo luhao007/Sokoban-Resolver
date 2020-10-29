@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SokobanLevels>
+  <Title>Sokoban Perfect</Title>
+  <LevelCollection>
+    <Level id="1">
+      <L> ####### </L>
+      <L> # @...# </L>
+      <L> #   ####</L>
+      <L>###$    #</L>
+      <L>#   #$# #</L>
+      <L># $ #   #</L>
+      <L>#   #####</L>
+      <L>#####    </L>
+    </Level>
+  </LevelCollection>
+</SokobanLevels>

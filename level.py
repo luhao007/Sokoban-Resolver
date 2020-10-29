@@ -2,8 +2,9 @@ import copy
 import enum
 import itertools
 import os
-from xml.etree import ElementTree
 import re
+from xml.dom import minidom
+from xml.etree import ElementTree
 
 
 class SokobanTiles(enum.IntEnum):
@@ -28,28 +29,28 @@ SLCTileMap = {
 }
 
 
-class SokobanMap(object):
+class SokobanMap:
 
-    def __init__(self, map, id=None):
-        self.map = self.generate_map(map)
-        self.id = id
+    def __init__(self, sokoban_map, map_id=None):
+        self.m = self.generate_map(sokoban_map)
+        self.id = map_id
 
-    def generate_map(self, l):
+    def generate_map(self, sokoban_map):
         valid = [v.value for v in SokobanTiles] + \
                 [str(v.value) for v in SokobanTiles] + \
                 list(SLCTileMap.keys()) + \
                 ['\n']
-        tiles = set(itertools.chain(*l))
+        tiles = set(itertools.chain(*sokoban_map))
         invalid = tiles.difference(valid)
         if invalid:
             raise ValueError('Invalid tiles: {}'.format(invalid))
 
         return [[int(SLCTileMap.get(t, t))
                  for t in r if t != '\n']
-                for r in l]
+                for r in sokoban_map]
 
 
-class SokobanLevel(object):
+class SokobanLevel:
 
     def __init__(self, level=None):
         self.title = None
@@ -102,7 +103,7 @@ class SokobanLevel(object):
     def map_info(self):
         if isinstance(self.level, list):
             return 'Custom Map'
-        elif isinstance(self.level, int):
+        if isinstance(self.level, int):
             return f'Map: {self.level}.txt'
 
         info = 'Map: {}'.format(self.level.split('/')[-1])
@@ -138,14 +139,41 @@ class SokobanLevel(object):
         self.title = root.find("Title").text.strip()
         self.description = root.find("Description").text.strip()
         self.maps = []
-        for l in root.iter('Level'):
-            self.maps.append(SokobanMap([r.text for r in l], l.get('Id')))
+        for level in root.iter('Level'):
+            self.maps.append(SokobanMap([r.text for r in level], level.get('Id')))
+
+
+def convert(folder):
+    root = ElementTree.Element('SokobanLevels')
+    title = ElementTree.SubElement(root, 'Title')
+    title.text = folder.split('/')[-1]
+    collection = ElementTree.SubElement(root, 'LevelCollection')
+    i = 1
+    for file in os.listdir(folder):
+        if not file.endswith('.txt'):
+            continue
+
+        level = ElementTree.SubElement(collection, 'Level', {'id': str(i)})
+
+        with open('/'.join([folder, file]), 'r') as f:
+            for r in f.readlines():
+                line = ElementTree.SubElement(level, 'L')
+                line.text = r[:-1]
+
+        i += 1
+        break
+
+    s = ElementTree.tostring(root, encoding='utf-8', xml_declaration=False)
+    parsed = minidom.parseString(s)
+    xml = parsed.toprettyxml(indent='  ', encoding='utf-8', newl='\n', xml_declaration=False)
+
+    with open(f'{folder}.xml', 'wb') as f:
+        f.write(xml)
 
 
 def main():
     level = SokobanLevel('levels/Sokoban1.slc')
-    from pprint import pprint
-    pprint(level.maps[0])
+    print(level.maps[0])
 
 
 if __name__ == '__main__':

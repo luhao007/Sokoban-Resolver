@@ -1,6 +1,3 @@
-import itertools
-import math
-import sys
 import tkinter
 from tkinter import messagebox
 

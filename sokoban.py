@@ -18,10 +18,10 @@ class Moves(Enum):
     DOWN = (0, 1)
 
 
-class SokobanState(object):
+class SokobanState:
 
-    def __init__(self, map):
-        self.map = map
+    def __init__(self, sokoban_map):
+        self.map = sokoban_map
 
     def __eq__(self, other):
         return self.map == other.map
@@ -39,6 +39,8 @@ class SokobanState(object):
                 if t & SokobanTiles.PLAYER:
                     return (x, y)
 
+        raise RuntimeError('Didnot find player position!')
+
     def move(self, m: Moves):
         """Move the player, generate a new state."""
         if self.check_finish():
@@ -46,31 +48,32 @@ class SokobanState(object):
 
         x, y = m.value
 
-        map = copy.deepcopy(self.map)
+        m = copy.deepcopy(self.map)
         c_x, c_y = self.player_pos()
         ahead = self.map[c_y + y][c_x + x]
 
         if ahead == SokobanTiles.WALL:
             raise CannotMoveError()
-        elif ahead.bit_length() < 2:    # Empty
-            map[c_y][c_x] -= SokobanTiles.PLAYER
-            map[c_y + y][c_x + x] += SokobanTiles.PLAYER
+
+        if ahead.bit_length() < 2:    # Empty
+            m[c_y][c_x] -= SokobanTiles.PLAYER
+            m[c_y + y][c_x + x] += SokobanTiles.PLAYER
         elif ahead & SokobanTiles.BOX:
-            two_ahead = map[c_y + y*2][c_x + x*2]
+            two_ahead = m[c_y + y*2][c_x + x*2]
             if two_ahead.bit_length() > 1:  # Not Empty
                 raise CannotMoveError()
 
-            map[c_y + y][c_x + x] -= SokobanTiles.BOX
-            map[c_y + y*2][c_x + x*2] += SokobanTiles.BOX
+            m[c_y + y][c_x + x] -= SokobanTiles.BOX
+            m[c_y + y*2][c_x + x*2] += SokobanTiles.BOX
 
-            map[c_y][c_x] -= SokobanTiles.PLAYER
-            map[c_y + y][c_x + x] += SokobanTiles.PLAYER
+            m[c_y][c_x] -= SokobanTiles.PLAYER
+            m[c_y + y][c_x + x] += SokobanTiles.PLAYER
 
-        new_state = SokobanState(map)
+        new_state = SokobanState(m)
         return new_state
 
 
-class SokobanCore(object):
+class SokobanCore:
 
     def __init__(self, level):
         self.level = SokobanLevel(level)
