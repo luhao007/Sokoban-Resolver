@@ -15,5 +15,6 @@ The levels are stored in [levels](https://github.com/luhao007/Sokoban-Resolver/t
 The level files are simple text files with each character as one tile.
 
 The tiles are defined in ```SokobanTiles``` class in [sokoban.py](https://github.com/luhao007/Sokoban-Resolver/blob/master/sokoban.py).
+It also support the common format of sokoban tiles listed in [Sokoban Wiki](http://www.sokobano.de/wiki/index.php?title=Level_format).
 
-Also support `.slc` and `.xml` version of sokoban level collections.
+The program support `.slc` format for sokoban level collections.

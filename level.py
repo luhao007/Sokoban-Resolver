@@ -3,8 +3,11 @@ import enum
 import itertools
 import os
 import re
+
 from xml.dom import minidom
 from xml.etree import ElementTree
+
+# from defusedxml import ElementTree, minidom
 
 
 class SokobanTiles(enum.IntEnum):
@@ -155,9 +158,15 @@ def convert(folder):
     root = ElementTree.Element('SokobanLevels')
     title = ElementTree.SubElement(root, 'Title')
     title.text = folder.split('/')[-1]
+    desc = ElementTree.SubElement(root, 'Description')
+    desc.text = folder.split('/')[-1]
     collection = ElementTree.SubElement(root, 'LevelCollection')
     i = 1
-    for file in os.listdir(folder):
+
+    def natural_keys(text):
+        return [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', text)]
+
+    for file in sorted(os.listdir(folder), key=natural_keys):
         if not file.endswith('.txt'):
             continue
 
@@ -169,13 +178,14 @@ def convert(folder):
                 line.text = r[:-1]
 
         i += 1
-        break
 
     s = ElementTree.tostring(root, encoding='utf-8', xml_declaration=False)
     parsed = minidom.parseString(s)
-    xml = parsed.toprettyxml(indent='  ', encoding='utf-8', newl='\n', xml_declaration=False)
+    xml = parsed.toprettyxml(indent='  ', encoding='utf-8', newl='\n')
 
-    with open(f'{folder}.xml', 'wb') as f:
+    # print(str(xml, encoding='utf-8'))
+
+    with open(f'{folder}.slc', 'wb') as f:
         f.write(xml)
 
 
