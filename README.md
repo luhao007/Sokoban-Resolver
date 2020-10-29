@@ -9,6 +9,16 @@ The classic Sokoban (box pushing) game with a simple (brute force) resolver (pen
 
 Run `main.py`
 
+## Play the Game
+
+```
+W A S D         Move player
+Arrow Keys      Move player
+U               Undo last move
+R               Reset map
+N P             Navigate Map
+```
+
 ## Levels
 
 The levels are stored in [levels](https://github.com/luhao007/Sokoban-Resolver/tree/master/levels) folder.
