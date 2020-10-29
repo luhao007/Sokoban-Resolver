@@ -1,14 +1,9 @@
 import copy
 import enum
 import itertools
-import os
 import re
 
-from xml.dom import minidom
-from xml.etree import ElementTree
-
-# from defusedxml import ElementTree, minidom
-
+from defusedxml import ElementTree
 
 class SokobanTiles(enum.IntEnum):
 
@@ -35,6 +30,7 @@ SLCTileMap = {
 class SokobanMap:
 
     def __init__(self, sokoban_map, map_id=None):
+        """Single sokoban map."""
         self.map = self.generate_map(sokoban_map)
         self.id = map_id
 
@@ -56,6 +52,7 @@ class SokobanMap:
 class SokobanLevel:
 
     def __init__(self, level=None):
+        """Interface to load sokoban maps."""
         self.title = None
         self.description = None
         self.load_level(level)
@@ -152,39 +149,6 @@ class SokobanLevel:
         self.maps = []
         for level in root.iter('Level'):
             self.maps.append(SokobanMap([r.text for r in level], level.get('Id')))
-
-
-def convert(folder):
-    root = ElementTree.Element('SokobanLevels')
-    title = ElementTree.SubElement(root, 'Title')
-    title.text = folder.split('/')[-1]
-    desc = ElementTree.SubElement(root, 'Description')
-    desc.text = folder.split('/')[-1]
-    collection = ElementTree.SubElement(root, 'LevelCollection')
-    i = 1
-
-    def natural_keys(text):
-        return [int(c) if c.isdigit() else c for c in re.split(r'(\d+)', text)]
-
-    for file in sorted(os.listdir(folder), key=natural_keys):
-        if not file.endswith('.txt'):
-            continue
-
-        level = ElementTree.SubElement(collection, 'Level', {'id': str(i)})
-
-        with open('/'.join([folder, file]), 'r') as f:
-            for r in f.readlines():
-                line = ElementTree.SubElement(level, 'L')
-                line.text = r[:-1].rstrip()
-
-        i += 1
-
-    s = ElementTree.tostring(root, encoding='utf-8', xml_declaration=False)
-    parsed = minidom.parseString(s)
-    xml = parsed.toprettyxml(indent='  ', encoding='utf-8', newl='\n')
-
-    with open(f'{folder}.slc', 'wb') as f:
-        f.write(xml)
 
 
 def main():

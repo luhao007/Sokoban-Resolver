@@ -1,3 +1,4 @@
+import functools
 import sys
 import textwrap
 import tkinter
@@ -31,21 +32,8 @@ class SokobanGame:
         if level:
             self.set_level(level)
 
-    def exit(self):
-        sys.exit(0)
-
     def show_moves(self):
         self.frame.show_moves()
-
-    def show_help(self, *_args):
-        msg = """
-        W A S D         Move player
-        Arrow Keys      Move player
-        U               Undo last move
-        R               Reset map
-        N P             Navigate Maps"""
-        msg = textwrap.dedent(msg).strip()
-        messagebox.showinfo(title='Help', message=msg)
 
     def add_menu(self):
         menubar = tkinter.Menu(self.root)
@@ -62,16 +50,16 @@ class SokobanGame:
         self.root.bind_all('<Control-o>', self.open_file)
         file_menu.add_separator()
         file_menu.add_command(label='Exit',
-                              command=self.exit,
+                              command=functools.partial(exit, 0),
                               accelerator='Alt+F4')
 
         game_menu.add_command(label='Show Moves...',
                               command=self.show_moves)
 
         help_menu.add_command(label='Help...',
-                              command=self.show_help,
+                              command=show_help,
                               accelerator='F1')
-        self.root.bind_all('<F1>', self.show_help)
+        self.root.bind_all('<F1>', show_help)
 
         self.root.config(menu=menubar)
 
@@ -81,6 +69,17 @@ class SokobanGame:
 
         self.frame.draw()
         self.root.mainloop()
+
+
+def show_help(*_args):
+    msg = """
+    W A S D         Move player
+    Arrow Keys      Move player
+    U               Undo last move
+    R               Reset map
+    N P             Navigate Maps"""
+    msg = textwrap.dedent(msg).strip()
+    messagebox.showinfo(title='Help', message=msg)
 
 
 def main():
