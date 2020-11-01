@@ -79,6 +79,7 @@ class SokobanState:
 class SokobanCore:
 
     def __init__(self, level):
+        """Core of Sokoban Game"""
         self.level = SokobanLevel(level)
         self.reset()
 
